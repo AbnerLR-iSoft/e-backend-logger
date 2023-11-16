@@ -6,6 +6,8 @@ const path    = require('path')
 const helmet  = require('helmet')
 const cookieParser = require('cookie-parser')
 
+const { db } = require('./config/database.config')
+
 const app = express()
 
 app.use(logger('dev'))
@@ -20,12 +22,9 @@ app.use('/api', require('./routes/main.routes'))
 
 app.listen(process.env.PORT || 4000, () => {
     console.log(`Server listeing on port ${ process.env.PORT || 4000 }`)
-  
-    // sequelize.authenticate()
-    // .then(() => {
-    //   console.log('Running Database')
-    // })
-    // .catch((err) => {
-    //   console.log(`Error connection to Database: ${err}`)
-    // })
+    
+    db.on('error', console.error.bind(console, 'DB connection error'))
+    db.once('open', () => {
+        console.log('Connected to Database')
+    })
 })
