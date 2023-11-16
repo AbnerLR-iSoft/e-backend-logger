@@ -18,7 +18,7 @@ app.use(cookieParser())
 app.use(express.static(path.join(__dirname, 'public')))
 app.use(cors())
 
-app.use('/api', require('./routes/main.routes'))
+app.use('/api', require('./routes/logs.routes'))
 
 app.listen(process.env.PORT || 4000, () => {
     console.log(`Server listeing on port ${ process.env.PORT || 4000 }`)

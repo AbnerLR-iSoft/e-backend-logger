@@ -2,11 +2,13 @@
 
 class MainController {
 
-	all(req, res, next) {
+	all = async (req, res, next) => {
 		res.json({ message: 'Example request.' });
 	}
 
-	create(req, res, next) {
+	create = (req, res, next) => {
+		console.log('CREATE TEST')
+		console.log(req.body)
 		res.json({ message: 'Example request.' });
 	}
 
