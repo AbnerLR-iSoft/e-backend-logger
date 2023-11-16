@@ -5,6 +5,8 @@ const prefix = '/logs';
 
 const controller = require('../controllers/logs.controller');
 
+router.post(`${prefix}/application`, controller.createApplication);
+
 router.get(`${prefix}/`, controller.all);
 router.post(`${prefix}/`, controller.create);
 router.get(`${prefix}/:id`, controller.info);
