@@ -1,7 +1,8 @@
 const { response } = require('express')
 const jwt = require('jsonwebtoken')
+const { Authorization } = require('../models/authorization.model')
 
-const validateJWT = (req, res = response, next) => {
+const validateJWT = async (req, res = response, next) => {
     try {
         const token = req.header('x-token')
 
@@ -12,8 +13,10 @@ const validateJWT = (req, res = response, next) => {
           })
         }
 
+        const findToken = await Authorization.findOne({ token }) 
+
         const { pplication_id } = jwt.verify(
-            token,
+            findToken.token,
             process.env.SECRET_JWT_SEED
         )
 
