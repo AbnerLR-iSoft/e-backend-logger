@@ -124,8 +124,32 @@ class MainController {
 		res.json({ message: 'Example request.' });
 	}
 
-	delete(req, res, next) {
-		res.json({ message: 'Example request.' });
+	delete = async (req, res, next) => {
+		try {
+			const { id } = req.params
+
+			const log = await this.findLogById(id)
+
+			if (!log) {
+				return res.status(404).json({
+					ok: false,
+					msg: 'Log not found'
+				})
+			}
+
+			await Log.deleteOne({ _id: log._id })
+
+			res.status(200).json({
+				ok: true,
+				log
+			})
+		} catch (error) {
+			console.error(error)
+			return res.status(400).json({
+				ok: false,
+				msg: 'Error Deleting Log'
+			})
+		}
 	}
 
 	findApplicationById = async (id) => {
