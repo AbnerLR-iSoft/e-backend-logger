@@ -4,18 +4,11 @@ const router = require('express').Router()
 const prefix = '/logs'
 
 const { joiValidate } = require('../helpers/generic-joi-validate')
-const { 
-    createApplicationSchema, 
+const {  
     createLogSchema,
     updateLogSchema
 } = require('../middlewares/joi-schemas')
 const controller = require('../controllers/logs.controller')
-
-router.post(
-  `${prefix}/application`, 
-  joiValidate(createApplicationSchema), 
-  controller.createApplication
-)
 
 router.get(`${prefix}/`, controller.all)
 router.post(
