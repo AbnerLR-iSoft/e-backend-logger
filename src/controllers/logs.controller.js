@@ -120,8 +120,47 @@ class MainController {
 		}
 	}
 
-	update(req, res, next) {
-		res.json({ message: 'Example request.' });
+	update = async (req, res, next) => {
+		try {
+			const { id } = req.params
+			const { 
+				application_id, type, priority, 
+				path, message, request, response 
+		    } = req.body
+
+            const log = await this.findLogById(id)
+            
+            if (!log) {
+				return res.status(404).json({
+					ok: false,
+					msg: 'Log not found'
+				})
+			}
+
+			const newLog = new Log({
+				_id: log._id,
+				application_id, type,
+				priority, path, message, 
+				request, response
+			})
+
+			const updateData = newLog.toObject()
+
+			await Log.updateOne({
+			  _id: log._id 
+			}, updateData)
+
+			res.status(200).json({
+				ok: true,
+				log
+			})
+		} catch (error) {
+			console.error(error)
+			return res.status(400).json({
+				ok: false,
+				msg: 'Error updating Log'
+			})
+		}
 	}
 
 	delete = async (req, res, next) => {
