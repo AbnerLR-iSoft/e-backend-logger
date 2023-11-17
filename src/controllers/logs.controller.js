@@ -1,5 +1,5 @@
 'use strinct';
-const { Application } = require('../models/application.model')
+const { Application, Authorization } = require('../models')
 class MainController {
 
 	all = async (req, res, next) => {
@@ -19,6 +19,13 @@ class MainController {
 					msg: 'Error creating application'
 				})
 			}
+
+			const newAuthorization = new Authorization({
+				application_id: application._id,
+				token: new Date().toString() 
+			})
+
+			await newAuthorization.save()
 
 			res.status(200).json({
 				ok: true,
