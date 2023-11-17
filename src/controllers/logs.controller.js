@@ -3,7 +3,19 @@ const { Application, Authorization, Log } = require('../models')
 class MainController {
 
 	all = async (req, res, next) => {
-		res.json({ message: 'Example request.' });
+		try {
+			const logs = await Log.find()
+            res.status(200).json({
+				ok: true,
+				logs
+			})
+		} catch (error) {
+			console.error(error)
+			return res.status(400).json({
+				ok: false,
+				msg: 'Error getting logs'
+			})
+		}
 	}
 
 	createApplication = async (req, res) => {
@@ -98,6 +110,7 @@ class MainController {
 		   const application = await Application.findById(id)
            return application
 		} catch (error) {
+			console.error(error)
 			return null
 		}
 	}
