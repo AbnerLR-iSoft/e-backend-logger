@@ -1,4 +1,5 @@
 'use strinct';
+const mongoose = require('mongoose')
 const { Application, Authorization, Log } = require('../models')
 class MainController {
 
@@ -26,7 +27,7 @@ class MainController {
 			const application = await newApplication.save()
 
 			if (!application) {
-				return res.status(400).json({
+				return res.status(404).json({
 					ok: false,
 					msg: 'Error creating application'
 				})
@@ -62,7 +63,7 @@ class MainController {
 			const application = await this.findApplicationById(application_id)
 
 			if (!application) {
-				res.status(400).json({
+				res.status(404).json({
 					ok: false,
 					msg: 'Application not found'
 				})
@@ -93,8 +94,30 @@ class MainController {
 		}
 	}
 
-	info(req, res, next) {
-		res.json({ message: 'Example request.' });
+	info = async (req, res, next) => {
+		try {
+			const { id } = req.params
+        
+			const log = await this.findLogById(id)
+            
+            if (!log) {
+				return res.status(404).json({
+					ok: false,
+					msg: 'Log not found'
+				})
+			}
+
+			res.status(200).json({
+ 				ok: true,
+				log
+			})
+		} catch (error) {
+			console.error(error)
+			return res.status(400).json({
+				ok: false,
+				msg: 'Error getting Log'
+			})
+		}
 	}
 
 	update(req, res, next) {
@@ -113,6 +136,18 @@ class MainController {
 			console.error(error)
 			return null
 		}
+	}
+
+	findLogById = async (id) => {
+       try {
+		 const objectIdToFind = new mongoose.Types.ObjectId(id)
+		 const log = await Log.findById({ _id: objectIdToFind })
+
+		 return log
+	   } catch (error) {
+		 console.error(error)
+		 return null
+	   }
 	}
 }
 
